@@ -1,40 +1,47 @@
-#include<windows.h>
-#include<stdio.h>
 #include<GL/glut.h>
-float house[5][2]={{200,100},{400,100},{300,300}};
-float h=200,k=100,theta;
-void drawtriangle()
+#include<math.h>
+#include<stdio.h>
+GLfloat d;
+GLfloat rX=0,rY=0;
+void Draw()
 {
-glBegin(GL_LINE_LOOP);
-glVertex2fv(house[0]);
-glVertex2fv(house[1]);
-glVertex2fv(house[2]);
-glEnd();
-}
-void display()
-{
+GLfloat P[3][2] = {{-0.5,0},{0.5,0},{0,0.6}};
+GLfloat nP[3][2],r;
+int i;
 glClear(GL_COLOR_BUFFER_BIT);
-drawtriangle();
-glTranslatef(h,k,0);
-glRotatef(theta,0,0,1);
-glTranslatef(-h,-k,0);
-drawtriangle();
+glColor3f(1,0,0);
+glBegin(GL_LINE_LOOP);
+glVertex2fv(P[0]);
+glVertex2fv(P[1]);
+glVertex2fv(P[2]);
+glEnd();
+r = d * 3.14/180;
+for(i=0;i<3;i++)
+{
+nP[i][0] = P[i][0]*cos(r)-P[i][1]*sin(r)-rX*cos(r)+rY*sin(r)+rX;
+nP[i][1] = P[i][0]*sin(r)+P[i][1]*cos(r)-rX*sin(r)-rY*cos(r)+rY;
+}
+glColor3f(0,1,0);
+glBegin(GL_LINE_LOOP);
+glVertex2fv(nP[0]);
+glVertex2fv(nP[1]);
+glVertex2fv(nP[2]);
+glEnd();
 glFlush();
 }
-void init()
+int main(int argC,char *argV[])
 {
-gluOrtho2D(-700,700,-700,700);
-}
-int main(int argc,char** argv)
-{
-    printf("Enter the rotation angle.\n");
-scanf("%f",&theta);
-glutInit(&argc,argv);
-glutInitDisplayMode(GLUT_SINGLE);
-glutInitWindowPosition(600,100);
-glutInitWindowSize(350,350);
-glutCreateWindow("house:C Tathva");
-glutDisplayFunc(display);
-init();
+printf("\nEnter the Pivot Point for Rotation : ");
+scanf("%f%f",&rX,&rY);
+printf("\nEnter the Degree of Rotation : ");
+scanf("%f",&d); 
+    glutInit(&argC,argV);
+glutInitDisplayMode(GLUT_RGB|GLUT_SINGLE);
+glutInitWindowPosition(0,0);
+glutInitWindowSize(500,500);
+glutCreateWindow("Lab-2");
+glutDisplayFunc(Draw);
+glutIdleFunc(Spin);
 glutMainLoop();
+return 0;
 }
